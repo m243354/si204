@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-
+  //vars and file that we will write to and read from
   string filename, outname, foo, date, time, maxDate, minDate;
   cin >> filename >> outname;
   ifstream fin(filename);
@@ -22,8 +22,8 @@ int main() {
   
   fin>>foo>>foo;
   out<<"day\t"<<"hour\t"<<"temp\n";
-  //r and q are throwaways. T is temp and sum is temp sum that will divide by
-  //times this ran.
+  //works the exact same as the other ones. there is now a writing component.
+  //xd
   while(fin >> date >> hr >> time >> t) {
     //convert t to fahrenheit
     t = (9*t)/5+32;
