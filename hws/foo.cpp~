@@ -1,0 +1,13 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int[2] foo()
+{
+  int A[2] = { 3,4};
+  return A;
+}
+
+
+int main() {
+}

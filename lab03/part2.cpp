@@ -10,26 +10,21 @@ int main() {
   cin >> t >> c >> currTyp;
   if (currTyp == "Dollars") {
     cin >> currTyp2 >> t >> goalTyp;
+    currTyp = currTyp+" "+currTyp2;
     if (goalTyp == "Dollars") {
       cin >> goalTyp2;
+      goalTyp = goalTyp+" "+goalTyp2;
     }
   } else {
     cin >> t >> goalTyp;
     if(goalTyp == "Dollars") {
       cin >> goalTyp2;
+      goalTyp = goalTyp+" "+goalTyp2;
     }
   }
-  //checking input
-  cout<< goalTyp<<'\n';
-  cout<< goalTyp2<<'\n';
   //makes it so if type is same, no reassignment occurs
   p = c;
   
-
-  currTyp = currTyp+" "+currTyp2;
-  goalTyp = goalTyp+" "+goalTyp2;
-  cout<<currTyp<<"\n";
-  cout<<goalTyp<<"\n";
   //conversion steps
   if(currTyp == "Euros") {
     if(goalTyp == "Dollars US") {
@@ -84,6 +79,7 @@ int main() {
       p=(1/1.3156)*c*0.7614;
     }
   }
+
   cout << p;
   return 0;
 }

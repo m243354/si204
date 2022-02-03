@@ -31,6 +31,23 @@ int main() {
   angleB = (angleB*180)/M_PI;
   angleC = (angleC*180)/M_PI;
   
+  //check for the obtuse angles being out of range
+  int angSum = angleA+angleB+angleC;
+  int largest;
+  if(angSum != 180) {
+    //an angle was taken arcsin incorrectly
+    //find longest side and fix arcsin
+    if(a>b && a>c) {
+      angleA = asin(M_PI-asArea*a);
+    }
+    if(b>a && b>c) {
+      angleB = asin(M_PI-asArea*a);
+    }
+    if(c>a && c>b) {
+      angleC = asin(M_PI-asArea*a);
+    }      
+  }
+
   //triangle angle classification
   if(angleA<90 && angleB<90 && angleC<90) {
     tri0 = "acute";
