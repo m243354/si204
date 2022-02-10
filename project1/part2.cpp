@@ -1,25 +1,21 @@
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
 int main() {
   double bal = 0, payCheck = 550, intibal = 700, saverate = 4, loanrate = 14, eodBal = 0;
   int maxWeek, maxDay;
-  //r is always the word run.
+  
   string r, file;
   
   if(!(cin >> r >> maxWeek >> file) || r != "run") {
     cout << "Expected : run N file\n";
     return 1;
-  } 
-
-  //I added 1 here to prevent any cases where 0 gets modded. I don't want that
-  //to ruin the modulo checks. Sunday is 8. Friday is 6
-  //apparently it is entered in weeks. I messed that up. I multiply max day by 7
-  //to fix.
-  //
-  //make this cycle a two week period so that the modulo works for pay day. Not
-  //efficent. Fix the modulo...
+  }
+  
+  
+  
   bal = intibal;
   maxDay = maxWeek*7.0;
  
