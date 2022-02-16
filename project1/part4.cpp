@@ -7,10 +7,10 @@
 using namespace std;
 
 int main() {
+  //variables schmariables
   double val, intr, bal = 0, exp, payCheck = 550, intibal = 700, saverate = 4, loanrate = 14, eodBal = 0;
   int maxWeek, maxDay;
   char q;
-  bool over = false;
 
   string r, file;
   //new check before to make sure we have run instead of another command
@@ -62,13 +62,9 @@ int main() {
         
         
       }
-      cout << "\ninitibal = " << intibal << "\n";
-      cout << "paycheck = " << payCheck << "\n";
-      cout << "saverate = " << saverate << "\n";
-      cout << "loanrate = " << loanrate << "\n";
-      
     }
-  }   
+  } 
+ 
 
   //old file check from earlier parts
   if(!(cin >> maxWeek >> file) || r != "run") {
@@ -88,23 +84,35 @@ int main() {
   //read in N, char equal sign, and n days.
   f >> r >> r >> expDay;
   
+  //checks if file has enough stuff
   if(expDay < maxWeek*7) {
     cout << "Insufficient values in \"" << file << "\"\n";
     return 3;
   }   
    
-  
-  
+   //couts yayuz
+  cout << "initibal = " << intibal << '\n';
+  cout << "paycheck = " << payCheck << '\n';
+  cout << "saverate = " << saverate << '\n';
+  cout << "loanrate = " << loanrate; 
+ 
   
   bal = intibal;
   maxDay = maxWeek*7.0;
   //reuse expDay for the loop
   for(int d=1;d<=maxDay;d++) {
-    //calculate interest
-    if(d%31 == 0) {
-      bal += intr*bal/100;
-      intr = 0;
-    }
+    //transfer interest and reset
+    if(d-1 > 0) {
+      if((d-1) % 30 == 0) {
+        //black magic for every 31st day but not really. I did 31, 61, 91 but I
+        //was getting 31, 62, 93... and I needed the difference between d and
+        //last intrest day to be 30. This change to mod worked.
+        bal += intr;
+        intr = 0;
+        //debug statement
+        //cout << "\nInterest reset and desposited \n";
+      }
+    }  
     
     if(d%14==13) {
       //pay day is every 13th day. should be 12 but the plus one for starting at
@@ -112,22 +120,23 @@ int main() {
       bal += payCheck;
     }
     
-    //calculate expenses
-    f >> exp;
+    //read expenses from file and subtract from bal 
+    f >> exp; 
     bal -= exp;
     
     //calculate interest and add it to itself. loanrate is used for negative
     //balances and saverate for positive balances
-    if(bal>=0) {
+    if(bal>0) {
       intr += bal * saverate/100 / 365;
     } else {
-      intr -= bal * loanrate/100 / 365; 
+      intr += bal * loanrate/100 / 365; 
     }
     
       
     //calculate end of day balance for each day
     eodBal += bal;
-    cout << "\nEnd of day "<<d<<": balance = "<<bal<<", interest = "<<intr;
+    //debug
+    //cout << "\nEnd of day "<<d<<": balance = "<<bal<<", interest = "<<intr;
   }
   
   cout<<"\nEnding interest = "<<intr;
