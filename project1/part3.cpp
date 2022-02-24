@@ -61,14 +61,11 @@ int main() {
         //fixed
         
         
-      }
-      cout << "initibal = " << intibal << "\n";
-      cout << "paycheck = " << payCheck << "\n";
-      cout << "saverate = " << saverate << "\n";
-      cout << "loanrate = " << loanrate << "\n";
-      
+      }     
     }
   }   
+  
+ 
 
   //old file check from earlier parts
   if(!(cin >> maxWeek >> file) || r != "run") {
@@ -91,8 +88,12 @@ int main() {
     cout << "Insufficient values in \"" << file << "\"\n";
     return 3;
   }   
-   
   
+  //cout
+  cout << "initibal = " << intibal << '\n';
+  cout << "paycheck = " << payCheck << '\n';
+  cout << "saverate = " << saverate << '\n';
+  cout << "loanrate = " << loanrate << '\n';
   
   
   bal = intibal;
