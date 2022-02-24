@@ -23,13 +23,16 @@ int main() {
   while(cin >> num >> q >> den >> q) {
     //result of gcd in int res
     int res = gcd(den, num);
-    cout << num << '/' << den;
+    //cout << num << '/' << den;
     //gcd returns 1 for those in lowest terms. 
     if(res != 1) {
+      cout << num << '/' << den;
       cout << " is not in lowest terms!\n";
-    } else {
-      cout << " is in lowest terms!\n";
     }
+    //temp debug
+    //else {
+      //cout << " is in lowest terms!\n";
+    //}
     //loop exit condition
     if(q == ';') {
       break;

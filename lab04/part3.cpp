@@ -38,7 +38,7 @@ int main() {
     sum += t;
     hr += 1;    
     //output data
-    out<<date<<' '<<hr<<'\t'<<t<<'\n';
+    out<<date<<'\t'<<hr<<'\t'<<t<<'\n';
 
     count++;
   }
