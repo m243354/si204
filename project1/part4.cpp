@@ -41,7 +41,8 @@ int main() {
       while(cin >> r) {
         //read in input for the remaining values and replace them.
         if(!(r == "paycheck" || r == "initibal" || r == "saverate" || r == "loanrate")) {
-          break;
+          cout << "Unknown command \"" << r << "\"\n";
+          return 4;
         } else {
           cin >> q >> val;
         }
