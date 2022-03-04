@@ -36,7 +36,7 @@ void swap(double &a, double &b) {
   b = r;
 }
 
-void readData(string filename, double Ti, double Tf, int posNeg) {
+void readData(string filename, double Ti, double Tf, double posNeg) {
  // find enthalpy delta
     ifstream fin(filename);
     bool foundi = false, foundf = false;
@@ -72,9 +72,9 @@ int main() {
   if (finalT < initT) {
     // swap high and low so Tf > Ti
     swap(finalT, initT);
-    readData("enth.txt", finalT, initT, 1);
+    readData("enth.txt", finalT, initT, 1.0);
   } else {
-    readData("enth.txt", finalT, initT, -1);
+    readData("enth.txt", finalT, initT, -1.0);
   }
   
  //my numbers are barely off. I think I am getting some loss of accuracy
