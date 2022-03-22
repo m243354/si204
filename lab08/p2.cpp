@@ -103,6 +103,7 @@ int main() {
     } else if(cmd == 2){
       //reverse move. check if args are good
       cin >> x >> y;
+      cout << x << " " << y << "\n";
       if(x<y) {
         int diff = y-x;
         holder = new int[diff+1];
@@ -111,6 +112,7 @@ int main() {
           holder[k] = a[x+i-65];
           k++;
         }
+        print(holder, n);
         //holder is reverse then swap everything
         for(int i=0; i<diff+1; i++) {
           swap(a, holder[i], a[x+i-65]);
