@@ -41,20 +41,71 @@ void shuffle(int** deck) {
   }
 }
 
+void printCard(int face, int suit) {
+  string cd;
+  switch(face) {
+    case 11:
+    //jack
+      face = 74;
+      break;
+
+    case 12:
+    //queen
+      face = 81;
+      break;
+
+    case 13:
+    //king
+      face = 75;
+      break;
+
+    case 14:
+    //ace
+      face = 65;
+      break;
+
+    case 10:
+    //cout a 1 for the other stuff later
+      cout << 1;
+      face = 48;
+      break;
+
+    default:
+    //face card
+      face += 48;
+      break;
+  }
+  //unix suit codes for output
+  switch(suit) {
+    case 1:
+      cd = "\u2663";
+      break;
+    case 2:
+      cd = "\u2666";
+      break;
+    case 3:
+      cd = "\u2665";
+      break;
+    case 4:
+      cd = "\u2660";
+      break;
+  }
+
+  cout << char(face) << cd << "\n";
+}
+
 void printDeck(int** deck) {
   for(int i=0; i<52; i++) {
-    //second index is the card stuff
-    cout << deck[i][2] << "\n";
+    //first index is the face value
+    int temp = deck[i][1];
+    int suit = deck[i][0];
+    printCard(temp, suit);
   }
 
 }
 
-int main() {
-  //generate card deck that is a list of lists containing card attributes
-  int** deck = genDeck();
-
+void takeInput(int** deck) {
   cout << "Shuffle: [n | s | u <seed>]: ";
-  //take in user input
   char in;
   cin >> in;
 
@@ -81,13 +132,21 @@ int main() {
     default:
       break;
   }
+}
 
+
+int main() {
+  //generate card deck that is a list of lists containing card attributes
+  int** deck = genDeck();
+
+  //take in user input
+  takeInput(deck);
   printDeck(deck);
 
   for(int c=0; c<52; c++) {
     delete[] deck[c];
   }
   delete[] deck;
-  
+
   return 0;
 }

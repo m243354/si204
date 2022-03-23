@@ -67,9 +67,8 @@ int readCmd() {
   }
 }
 
-void swap(int* arr, char pos1, char pos2) {
+void swap(int* arr, int p1, int p2) {
   //swap positions 1 and 2 in array arr
-  int p1 = pos1-65, p2 = pos2-65;
   int temp = arr[p1];
   arr[p1] = arr[p2];
   arr[p2] = temp;
@@ -95,7 +94,7 @@ int main() {
       print(a,n);
       cmd = readCmd();
     }
-    //2 possibliites for cmd; 1 or 0.1 is help 2 is swap
+    //2 possibliites for cmd; 1 is help, 0 is swap, 2 is reverse
     if(cmd == 1) {
       //help
       cout << "PutInOrder!  The goal is to order from smallest to largest with the lowest score.\nThe moves are:\nswap x y    - swaps the values in column x and column y\nScoring: swap = 3pts\n";
@@ -103,7 +102,6 @@ int main() {
     } else if(cmd == 2){
       //reverse move. check if args are good
       cin >> x >> y;
-      cout << x << " " << y << "\n";
       if(x<y) {
         int diff = y-x;
         holder = new int[diff+1];
@@ -112,20 +110,23 @@ int main() {
           holder[k] = a[x+i-65];
           k++;
         }
-        print(holder, n);
+
         //holder is reverse then swap everything
-        for(int i=0; i<diff+1; i++) {
-          swap(a, holder[i], a[x+i-65]);
+        for(int i=0; i<(diff+1)/2; i++) {
+          //a[x-65] is the first character to pick. If X is a, this yields 0.
+          //swaps first a with first holder.
+          swap(a, x+i-65, y-65-i);
         }
         score += 2;
+        turns++;
       }
-      //print(a,n);
+
     } else {
       //swap was given so read next chars;
       cin >> x >> y;
       score += 3;
       turns++;
-      swap(a, x, y);
+      swap(a, x-65, y-65);
       //print(a,n);
     }
     print(a,n);

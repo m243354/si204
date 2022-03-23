@@ -86,9 +86,8 @@ int readCmd() {
   }
 }
 
-void swap(int* arr, char pos1, char pos2) {
+void swap(int* arr, int p1, int p2) {
   //swap positions 1 and 2 in array arr
-  int p1 = pos1-65, p2 = pos2-65;
   int temp = arr[p1];
   arr[p1] = arr[p2];
   arr[p2] = temp;
@@ -131,18 +130,20 @@ int main() {
           k++;
         }
         //holder is reverse then swap everything
-        for(int i=0; i<diff+1; i++) {
-          swap(a, holder[i], a[x+i-65]);
+        for(int i=0; i<(diff+1)/2; i++) {
+          //a[x-65] is the first character to pick. If X is a, this yields 0.
+          //swaps first a with first holder.
+          swap(a, x+i-65, y-65-i);
         }
         score += 2;
+        turns++;
       }
-      //print(a,n);
     } else {
       //swap was given so read next chars;
       cin >> x >> y;
       score += 3;
       turns++;
-      swap(a, x, y);
+      swap(a, x-65, y-65);
       //print(a,n);
     }
     print(a,n);
