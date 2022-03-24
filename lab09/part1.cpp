@@ -27,7 +27,7 @@ int** pgmToArr(string filename) {
   pgmArr[0][0] = w;
   pgmArr[0][1] = h;
   //first row of the pgm arr will have the width and height;
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     pgmArr[y] = new int[w];
     for(int x=0; x<w; x++) {
       f >> temp;
@@ -45,7 +45,7 @@ int** posterize(int** pgmArr) {
   result[0][0] = w;
   result[0][1] = h;
 
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     result[y] = new int[w];
     for(int x=0; x<w; x++) {
       int val = pgmArr[y][x];
@@ -65,13 +65,21 @@ void savePGM(int** pgmArr, string name) {
   int h = pgmArr[0][1], w = pgmArr[0][0];
   f << "P2\n";
   f << w << " " << h << '\n' << 255 << '\n';
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     for(int x=0; x<w; x++) {
       f << pgmArr[y][x] << "\t";
     }
     f << '\n';
   }
 }
+
+// void delPGM(int** pgmArr) {
+//   int h = pgmArr[0][1], w = pgmArr[0][0];
+//   for(int y=1; y<h; y++) {
+//     delete [] pgmArr[y];
+//   }
+//   delete [] pgmArr;
+// }
 
 int main() {
   /* code */
@@ -83,10 +91,10 @@ int main() {
 
   int** pgm = pgmToArr(fn);
   int** poster = posterize(pgm);
-  //printNice(pgm);
-  //printNice(poster);
 
   savePGM(poster, of);
+
+  //delPGM(pgm, poster);
 
   return 0;
 }

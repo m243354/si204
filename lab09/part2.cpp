@@ -5,7 +5,7 @@ using namespace std;
 
 void printNice(int** pgmArr) {
   int h = pgmArr[0][1], w = pgmArr[0][0];
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     for(int x=0; x<w; x++) {
       cout << pgmArr[y][x] << " ";
     }
@@ -45,7 +45,7 @@ int** posterize(int** pgmArr) {
   result[0][0] = w;
   result[0][1] = h;
 
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     result[y] = new int[w];
     for(int x=0; x<w; x++) {
       int val = pgmArr[y][x];
@@ -74,7 +74,7 @@ int** mirror(int** pgmArr) {
   // }
 
   int yPos = 1, xPos;
-  for(int y=h-1; y>=1; y--) {
+  for(int y=h; y>=1; y--) {
     xPos = 0;
     result[y] = new int[w];
     for(int x=0; x<w; x++) {
@@ -89,7 +89,7 @@ int** mirror(int** pgmArr) {
 
 void test(int h, int w) {
   int yPos = 1, xPos;
-  for(int y=h-1; y>=1; y--) {
+  for(int y=h; y>=1; y--) {
     xPos = 0;
     for(int x=w-1; x>=0; x--) {
       cout << "current X: " << xPos << " Current y: " << yPos << '\n';
@@ -106,12 +106,20 @@ void savePGM(int** pgmArr, string name) {
   int h = pgmArr[0][1], w = pgmArr[0][0];
   f << "P2\n";
   f << w << " " << h << '\n' << 255 << '\n';
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     for(int x=0; x<w; x++) {
       f << pgmArr[y][x] << "\t";
     }
     f << '\n';
   }
+}
+
+void delPGM(int** pgmArr) {
+  int h = pgmArr[0][1], w = pgmArr[0][0];
+  for(int y=0; y<h+1; y++) {
+    delete [] pgmArr[y];
+  }
+  delete [] pgmArr;
 }
 
 int main() {
