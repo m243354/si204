@@ -75,6 +75,9 @@ void printCard(int face, int suit, bool newLine) {
       face += 48;
       break;
   }
+  if(face != 48) {
+    cout << " ";
+  }
   //cout <<"  suit:" <<suit << " ";
   //unix suit codes for output
   switch(suit) {
@@ -109,12 +112,12 @@ void printDeck(int** deck) {
 }
 
 void displayHands(int*** players, int turns) {
-  cout << '\n' << " Player  Dealer \n";
+  cout << '\n' << " Player Dealer \n";
   for(int i=0; i<turns+1; i++) {
     //uses print card function. Player[1] is player hand. Take ith card in that hand and then get the suit and value to print. Same for dealer
-    cout << "|  ";
+    cout << "| ";
     printCard(players[1][i][1], players[1][i][0], false);
-    cout << "  |  ";
+    cout << "  | ";
     printCard(players[0][i][1], players[0][i][0], false);
     cout << "  |\n";
   }

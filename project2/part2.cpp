@@ -75,6 +75,9 @@ void printCard(int face, int suit) {
       face += 48;
       break;
   }
+  if(face != 48) {
+    cout << " ";
+  }
   //unix suit codes for output
   switch(suit) {
     case 1:

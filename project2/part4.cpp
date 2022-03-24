@@ -41,8 +41,10 @@ void shuffle(int** deck) {
   }
 }
 
-void printCard(int face, int suit, bool newLine) {
+void printCard(int* card, bool newLine) {
   string cd;
+  int face = card[1];
+  int suit = card[0];
   switch(face) {
     case 11:
     //jack
@@ -75,6 +77,9 @@ void printCard(int face, int suit, bool newLine) {
       face += 48;
       break;
   }
+  if(face != 48) {
+    cout << " ";
+  }
   //cout <<"  suit:" <<suit << " ";
   //unix suit codes for output
   switch(suit) {
@@ -101,21 +106,19 @@ void printCard(int face, int suit, bool newLine) {
 void printDeck(int** deck) {
   for(int i=0; i<52; i++) {
     //first index is the face value
-    int temp = deck[i][1];
-    int suit = deck[i][0];
-    printCard(temp, suit, true);
+    printCard(deck[i], true);
   }
 
 }
 
 void displayHands(int*** players, int turns) {
-  cout << '\n' << " Player  Dealer \n";
-  for(int i=0; i<turns+1; i++) {
+  cout << '\n' << " Player Dealer \n";
+  for(int i=0; i<turns; i++) {
     //uses print card function. Player[1] is player hand. Take ith card in that hand and then get the suit and value to print. Same for dealer
-    cout << "|  ";
-    printCard(players[1][i][1], players[1][i][0], false);
-    cout << "  |  ";
-    printCard(players[0][i][1], players[0][i][0], false);
+    cout << "| ";
+    printCard(players[1][i], false);
+    cout << "  | ";
+    printCard(players[0][i], false);
     cout << "  |\n";
   }
   cout << '\n';
@@ -161,6 +164,17 @@ void dealCards(int** deck, int*** players, int turn) {
   }
 }
 
+bool hitOrStd(int round) {
+  cout << "Round " << round << " Player's turn \nhit or stand? [h/s] ";
+  char c;
+  cin >> c;
+  if(c=='h') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 
 int main() {
   //generate card deck that is a list of lists containing card attributes
@@ -182,20 +196,26 @@ int main() {
   //dealer[card, card, card,...]
   //card[suit, face, stuff]
 
-  int turn = 0;
+  int turn = 1;
   bool play = true;
 
   //take in user input
   takeInput(deck);
   //printDeck(deck);
+  //deal twice to start
+  int ccount = 0;
+  dealCards(deck, players, ccount++);
+  dealCards(deck, players, ccount++);
+
   while(play) {
-    dealCards(deck, players, turn);
-    displayHands(players, turn);
-    turn++;
-    takeInput(deck);
-    if(turn>5) {
+    displayHands(players, ccount);
+    if(hitOrStd(turn)) {
+      dealCards(deck, players, ccount++);
+    } else {
+      //do else?
       play = false;
     }
+    turn++;
   }
 
 
@@ -213,7 +233,6 @@ int main() {
   delete[] players;
 
   //printDeck(deck);
-
 
   return 0;
 }
