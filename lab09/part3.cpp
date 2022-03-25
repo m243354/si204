@@ -5,7 +5,7 @@ using namespace std;
 
 void printNice(int** pgmArr) {
   int h = pgmArr[0][1], w = pgmArr[0][0];
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     for(int x=0; x<w; x++) {
       cout << pgmArr[y][x] << " ";
     }
@@ -18,7 +18,7 @@ int** pgmToArr(string filename) {
   string t;
   //skip the p2
   f >> t;
-  //width and height
+  //width and heightg
   int w, h, temp;
   //get width height and 255
   f >> w >> h >> temp;
@@ -27,7 +27,7 @@ int** pgmToArr(string filename) {
   pgmArr[0][0] = w;
   pgmArr[0][1] = h;
   //first row of the pgm arr will have the width and height;
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     pgmArr[y] = new int[w];
     for(int x=0; x<w; x++) {
       f >> temp;
@@ -45,7 +45,7 @@ int** posterize(int** pgmArr) {
   result[0][0] = w;
   result[0][1] = h;
 
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     result[y] = new int[w];
     for(int x=0; x<w; x++) {
       int val = pgmArr[y][x];
@@ -68,36 +68,17 @@ int** mirror(int** pgmArr) {
   result[0][0] = w;
   result[0][1] = h;
 
-  // for(int y=1; y<h; y++) {
-  //   result[y] = new int[w];
-  //
-  // }
-
-  int yPos = 1, xPos;
-  for(int y=h-1; y>=1; y--) {
-    xPos = 0;
+  //ypos counts up and the y counts down. x remains the same
+  int yPos = 1;
+  for(int y=h; y>0; y--) {
     result[y] = new int[w];
-    for(int x=w-1; x>=0; x--) {
-      int val = pgmArr[yPos][xPos];
+    for(int x=0; x<w; x++) {
+      int val = pgmArr[yPos][x];
       result[y][x] = val;
-      xPos++;
     }
     yPos++;
   }
   return result;
-}
-
-void test(int h, int w) {
-  int yPos = 1, xPos;
-  for(int y=h-1; y>=1; y--) {
-    xPos = 0;
-    for(int x=w-1; x>=0; x--) {
-      cout << "current X: " << xPos << " Current y: " << yPos << '\n';
-      cout << "goal X: " << x << " goal Y: " << y << '\n';
-      xPos++;
-    }
-    yPos++;
-  }
 }
 
 int** merge(int** pgmArr, int** pgmArr2) {
@@ -108,7 +89,7 @@ int** merge(int** pgmArr, int** pgmArr2) {
   result[0][0] = w;
   result[0][1] = h;
 
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     result[y] = new int[w];
     for(int x=0; x<w; x++) {
       int val = (pgmArr[y][x] + pgmArr2[y][x])/2;
@@ -119,18 +100,25 @@ int** merge(int** pgmArr, int** pgmArr2) {
   return result;
 }
 
-
 void savePGM(int** pgmArr, string name) {
   ofstream f(name);
   int h = pgmArr[0][1], w = pgmArr[0][0];
   f << "P2\n";
   f << w << " " << h << '\n' << 255 << '\n';
-  for(int y=1; y<h; y++) {
+  for(int y=1; y<h+1; y++) {
     for(int x=0; x<w; x++) {
       f << pgmArr[y][x] << "\t";
     }
     f << '\n';
   }
+}
+
+void delPGM(int** pgmArr) {
+  int h = pgmArr[0][1]+1;
+  for(int y=0; y<h; y++) {
+    delete [] pgmArr[y];
+  }
+  delete [] pgmArr;
 }
 
 int main() {
@@ -151,6 +139,10 @@ int main() {
   //test(10, 10);
 
   savePGM(merged, of);
+
+  delPGM(pgm);
+  delPGM(pgm2);
+  delPGM(merged);
 
   return 0;
 }

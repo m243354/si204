@@ -73,13 +73,13 @@ void savePGM(int** pgmArr, string name) {
   }
 }
 
-// void delPGM(int** pgmArr) {
-//   int h = pgmArr[0][1], w = pgmArr[0][0];
-//   for(int y=1; y<h; y++) {
-//     delete [] pgmArr[y];
-//   }
-//   delete [] pgmArr;
-// }
+void delPGM(int** pgmArr) {
+  int h = pgmArr[0][1]+1;
+  for(int y=0; y<h; y++) {
+    delete [] pgmArr[y];
+  }
+  delete [] pgmArr;
+}
 
 int main() {
   /* code */
@@ -94,7 +94,8 @@ int main() {
 
   savePGM(poster, of);
 
-  //delPGM(pgm, poster);
+  delPGM(pgm);
+  delPGM(poster);
 
   return 0;
 }
