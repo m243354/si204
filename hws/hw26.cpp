@@ -59,7 +59,7 @@ int* selectionsort2(int *A, int n) {
   }
   return newL;
 }
-
+x
 void print(int *list, int n) {
   for(int i=0; i<n; i++) {
     cout << list[i];
