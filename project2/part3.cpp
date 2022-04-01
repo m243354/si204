@@ -112,7 +112,7 @@ void printDeck(int** deck) {
 }
 
 void displayHands(int*** players, int turns) {
-  cout << '\n' << " Player Dealer \n";
+  cout << '\n' << " Player Dealer\n";
   for(int i=0; i<turns+1; i++) {
     //uses print card function. Player[1] is player hand. Take ith card in that hand and then get the suit and value to print. Same for dealer
     cout << "| ";
@@ -121,7 +121,6 @@ void displayHands(int*** players, int turns) {
     printCard(players[0][i][1], players[0][i][0], false);
     cout << "  |\n";
   }
-  cout << '\n';
 }
 
 void takeInput(int** deck) {
@@ -191,12 +190,12 @@ int main() {
   //take in user input
   takeInput(deck);
   //printDeck(deck);
+  dealCards(deck, players, turn);
+  turn++;
   while(play) {
     dealCards(deck, players, turn);
-    displayHands(players, turn);
-    turn++;
-    takeInput(deck);
-    if(turn>5) {
+    displayHands(players, turn++);
+    if(turn>4) {
       play = false;
     }
   }

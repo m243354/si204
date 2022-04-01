@@ -111,17 +111,26 @@ void printDeck(int** deck) {
 
 }
 
-void displayHands(int*** players, int turns) {
-  cout << '\n' << " Player Dealer \n";
-  for(int i=0; i<turns; i++) {
+void displayHands(int*** players, int turns, int pCount, int dCount) {
+  cout << '\n' << " Player Dealer\n";
+  for(int i=0; i<turns+1; i++) {
     //uses print card function. Player[1] is player hand. Take ith card in that hand and then get the suit and value to print. Same for dealer
     cout << "| ";
-    printCard(players[1][i], false);
+
+    if(i < pCount) {
+      printCard(players[1][i], false);
+    } else {
+      cout << "  ";
+    }
     cout << "  | ";
-    printCard(players[0][i], false);
+
+    if(i < dCount) {
+      printCard(players[0][i], false);
+    } else {
+      cout << "  ";
+    }
     cout << "  |\n";
   }
-  cout << '\n';
 }
 
 void takeInput(int** deck) {
@@ -154,18 +163,26 @@ void takeInput(int** deck) {
   }
 }
 
-void dealCards(int** deck, int*** players, int turn) {
+void dealCards(int** deck, int*** players, int pCount, int dCount, bool dealP, bool dealD) {
   //index 0 will be dealer and index 1 will be player
   //pick for player first then dealer
   //if turn is 0, choose 0 and 1. If turn is 1, choose 2 and 3, turn is 2 choose 4 and 5, turn is 3 choose 6 and 7
   for(int i=0; i<3; i++) {
-    players[1][turn][i] = deck[turn*2][i];
-    players[0][turn][i] = deck[turn*2+1][i];
+    if(dealD) {
+      players[1][pCount][i] = deck[pCount*2][i];
+    }
+    if(dealP) {
+      players[0][dCount][i] = deck[dCount*2+1][i];
+    }
   }
 }
 
-bool hitOrStd(int round) {
-  cout << "Round " << round << " Player's turn \nhit or stand? [h/s] ";
+bool hitOrStd(int round, int choice) {
+  string s = "Dealer";
+  if(choice == 0) {
+    s = "Player";
+  }
+  cout << "Round " << round << " " << s <<"'s turn \nhit or stand? [h/s] ";
   char c;
   cin >> c;
   if(c=='h') {
@@ -203,18 +220,31 @@ int main() {
   takeInput(deck);
   //printDeck(deck);
   //deal twice to start
-  int ccount = 0;
-  dealCards(deck, players, ccount++);
-  dealCards(deck, players, ccount++);
+  int pccount = 0, dccount = 0;
+  dealCards(deck, players, pccount++, dccount++, true, true);
+  dealCards(deck, players, pccount++, dccount++, true, true);
 
   while(play) {
-    displayHands(players, ccount);
-    if(hitOrStd(turn)) {
-      dealCards(deck, players, ccount++);
+
+    displayHands(players, turn, pccount, dccount);
+    //ask player to hit or stand
+    if(hitOrStd(turn, 0)) {
+      dealCards(deck, players, pccount++, dccount, true, false);
+      printDeck(players[0]);
     } else {
       //do else?
       play = false;
     }
+    turn++;
+    displayHands(players, turn, pccount, dccount);
+    if(hitOrStd(turn-1, 1)) {
+      dealCards(deck, players, pccount, dccount++, false, true);
+    } else {
+      //do else?
+      play = false;
+    }
+
+    //ask dealer to hit or stand
     turn++;
   }
 
