@@ -220,20 +220,20 @@ int main() {
   takeInput(deck);
   //printDeck(deck);
   //deal twice to start
+  //pccard count is the index of the card to deal and should be incremented after each call to deal cards
   int pccount = 0, dccount = 0;
   dealCards(deck, players, pccount++, dccount++, true, true);
   dealCards(deck, players, pccount++, dccount++, true, true);
 
   while(play) {
-
     displayHands(players, turn, pccount, dccount);
     //ask player to hit or stand
     if(hitOrStd(turn, 0)) {
       dealCards(deck, players, pccount++, dccount, true, false);
-      printDeck(players[0]);
+      //printDeck(players[0]);
     } else {
       //do else?
-      play = false;
+      //play = false;
     }
     turn++;
     displayHands(players, turn, pccount, dccount);
@@ -241,11 +241,14 @@ int main() {
       dealCards(deck, players, pccount, dccount++, false, true);
     } else {
       //do else?
-      play = false;
+      //play = false;
     }
-
+    displayHands(players, turn, pccount, dccount);
     //ask dealer to hit or stand
     turn++;
+    if(turn>5) {
+      play = false;
+    }
   }
 
 
