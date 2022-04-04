@@ -118,19 +118,21 @@ void displayHands(int*** players, int turns, int pCount, int dCount) {
     cout << "| ";
 
     if(i < pCount) {
+      //cout << "i=" << i << " players=" << players[1][i][0] << '\n';
       printCard(players[1][i], false);
     } else {
-      cout << "  ";
+      cout << "   ";
     }
     cout << "  | ";
 
     if(i < dCount) {
       printCard(players[0][i], false);
     } else {
-      cout << "  ";
+      cout << "   ";
     }
     cout << "  |\n";
   }
+
 }
 
 void takeInput(int** deck) {
@@ -167,12 +169,14 @@ void dealCards(int** deck, int*** players, int pCount, int dCount, bool dealP, b
   //index 0 will be dealer and index 1 will be player
   //pick for player first then dealer
   //if turn is 0, choose 0 and 1. If turn is 1, choose 2 and 3, turn is 2 choose 4 and 5, turn is 3 choose 6 and 7
+  cout << "pcount: " << pCount << " dcount: " << dCount << '\n';
+  int totalCards = (pCount)+(dCount);
   for(int i=0; i<3; i++) {
-    if(dealD) {
-      players[1][pCount][i] = deck[pCount*2][i];
-    }
     if(dealP) {
-      players[0][dCount][i] = deck[dCount*2+1][i];
+      players[1][pCount][i] = deck[totalCards][i];
+    }
+    if(dealD) {
+      players[0][dCount][i] = deck[totalCards+1][i];
     }
   }
 }
@@ -182,14 +186,13 @@ bool hitOrStd(int round, int choice) {
   if(choice == 0) {
     s = "Player";
   }
-  cout << "Round " << round << " " << s <<"'s turn \nhit or stand? [h/s] ";
+  cout << "Round " << round << " " << s <<"'s turn\nhit or stand? [h/s] ";
   char c;
   cin >> c;
-  if(c=='h') {
+  if(c == 'h') {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 
 
@@ -224,14 +227,17 @@ int main() {
   int pccount = 0, dccount = 0;
   dealCards(deck, players, pccount++, dccount++, true, true);
   dealCards(deck, players, pccount++, dccount++, true, true);
+  displayHands(players, turn, pccount, dccount);
 
   while(play) {
-    displayHands(players, turn, pccount, dccount);
+
     //ask player to hit or stand
     if(hitOrStd(turn, 0)) {
+      //cout << "player card count=" << pccount << endl;
       dealCards(deck, players, pccount++, dccount, true, false);
       //printDeck(players[0]);
     } else {
+
       //do else?
       //play = false;
     }
@@ -245,7 +251,7 @@ int main() {
     }
     displayHands(players, turn, pccount, dccount);
     //ask dealer to hit or stand
-    turn++;
+
     if(turn>5) {
       play = false;
     }

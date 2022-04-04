@@ -1,0 +1,5 @@
+N = 4
+A pos -120.0 vel 22.5
+X pos 20.5 vel -14.0
+C pos 7.0 vel 20.0
+M pos -5.5 vel -8.5
