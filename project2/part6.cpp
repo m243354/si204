@@ -1,12 +1,13 @@
 #include <iostream>
 #include <ctime>
+#include <unistd.h>
 
 using namespace std;
 
 int** genDeck() {
   int** deck = new int*[52];
-  //v is face value and s is suit
-  int v=2, s=0;
+  //v is face value and s is suit pv is point value
+  int v=2, s=0, pv = 2;
   for(int c=0; c<52; c++) {
 
     if(c%13==0) {
@@ -15,12 +16,22 @@ int** genDeck() {
 
     //create each card pointer
     deck[c] = new int[3];
-    deck[c][2] = 100*s+v;
+    deck[c][2] = pv++;
     deck[c][0] = s;
     deck[c][1] = v++;
+    if(pv > 10) {
+      pv = 10;
+      //makes point value 10 for all face cards
+    }
+    //aces are scored as 1
+    if(v == 14) {
+      pv = 1;
+    }
 
     if(v>14){
       v=2;
+      pv = 2;
+      //resets v and pv after counting all the face cards
     }
   }
   return deck;
@@ -110,7 +121,62 @@ void printDeck(int** deck,int n) {
   }
 }
 
-void displayHands(int*** players, int turns, int pCount, int dCount) {
+int scoreMe(int*** players, int turns, int count, int index) {
+  int pScore = 0;
+  bool pAce = false;
+  for(int i=0; i<turns+1; i++) {
+    if(i < count) {
+      pScore += players[index][i][2];
+    }
+    if(players[index][i][1] == 14) {
+      //ace
+      pAce = true;
+    }
+  }
+
+  if((pScore+10)<21 && pAce) {
+    pScore += 10;
+  }
+
+  return pScore;
+}
+
+
+//reads a deck and returns dealer score and couts both scores
+int scoreDeck(int*** players, int turns, int pCount, int dCount, bool printScore) {
+  int p1Score = 0, p2Score = 0;
+  bool p1Ace = false, p2Ace = false;
+  for(int i=0; i<turns+1; i++) {
+    if(i < pCount) {
+      p1Score += players[1][i][2];
+    }
+    if(players[1][i][1] == 14) {
+      //ace
+      p1Ace = true;
+    }
+
+    if(i < dCount) {
+      p2Score += players[0][i][2];
+    }
+    if(players[0][i][1] == 14) {
+      //ace
+      p2Ace = true;
+    }
+  }
+
+  if((p1Score+10)<21 && p1Ace) {
+    p1Score += 10;
+  }
+  if((p2Score+10)<21 && p2Ace) {
+    p2Score += 10;
+  }
+  if(printScore) {
+    cout << "Player " << p1Score << ", Dealer " << p2Score << '\n';
+  }
+  return p2Score;
+}
+
+void displayHands(int*** players, int turns, int pCount, int dCount, bool printScore) {
   cout << " Player Dealer\n";
   //turns starts at 1 when card count is 2, so max card count is 1+turns. Run this loop for maximum possible cards and only print if there is a card at that index.
   for(int i=0; i<turns+1; i++) {
@@ -134,6 +200,7 @@ void displayHands(int*** players, int turns, int pCount, int dCount) {
       cout << "  |\n";
     }
   }
+  int temp = scoreDeck(players, turns, pCount, dCount, printScore);
 }
 
 void takeInput(int** deck) {
@@ -194,6 +261,7 @@ bool hitOrStd(int round, int choice) {
   cout << "Round " << round << " " << s <<"'s turn\nhit or stand? [h/s] ";
   char c;
   cin >> c;
+
   if(c == 'h') {
     return true;
   }
@@ -235,7 +303,7 @@ int main() {
   int pccount = 0, dccount = 0;
   dealCards(deck, players, pccount++, dccount++, true, true);
   dealCards(deck, players, pccount++, dccount++, true, true);
-  displayHands(players, turn, pccount, dccount);
+  displayHands(players, turn, pccount, dccount, true);
 
   while(play) {
     //ask player to hit or stand
@@ -250,31 +318,65 @@ int main() {
         //play = false;
       }
       //count to turn+1 because it hasnt accounted for the turn being incremented afer both players move.
-      displayHands(players, turn+1, pccount, dccount);
+      system("clear");
+      displayHands(players, turn+1, pccount, dccount, true);
     }
-    system("clear");
     if(dealerIn) {
-      if(hitOrStd(turn, 1)) {
+      cout << flush;
+      sleep(2);
+      bool decide = scoreDeck(players, turn, pccount, dccount, false) < 17;
+      cout << "Round " << turn << " Dealer's turn\nhit or stand? [h/s] ";
+      if(decide) {
+        cout << "h\n";
         dealCards(deck, players, pccount, dccount++, false, true);
       } else {
+        cout << "s\n";
         //do else?
         //play = false;
         dealerIn = false;
       }
-      displayHands(players, turn+1, pccount, dccount);
+      system("clear");
+      if(turn < 3) {
+        displayHands(players, turn+1, pccount, dccount, true);
+      } else {
+        displayHands(players, turn+1, pccount, dccount, false);
+      }
+    }
+
+
       //ask dealer to hit or stand
       // if(!playerIn) {
       //   turn++;
       // }
-    }
-    system("clear");
+
     turn++;
     //if(dealerIn && playerIn) {
     //  play = false;
-    //}
-    playerIn = true;
-    dealerIn = true;
+
     if(turn > 3) {
+      play = false;
+    }
+
+    //bust people
+    int playerScore, dealerScore;
+    playerScore = scoreMe(players, turn, pccount, 1);
+    dealerScore = scoreMe(players, turn, pccount, 0);
+    if(playerScore > 21) {
+      playerIn = false;
+    }
+    if(dealerScore > 21) {
+      dealerIn = false;
+    }
+    if(!dealerIn && !playerIn) {
+      play = false;
+    }
+    // if(playerScore == 21) {
+    //   play = false;
+    // }
+    // if(dealerScore == 21) {
+    //   play = false;
+    // }
+    if(playerScore == 21 && dealerScore == 21) {
       play = false;
     }
   }
