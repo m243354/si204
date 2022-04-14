@@ -14,52 +14,87 @@ void printspaced(string* arr, int i, int n) {
   }
 }
 
-//searches an array of length n starting at index i, for a string and returns true if it is found and false if not
-int search(string* arr, string find, int i, int n) {
-  for(int k=i; k<n; k++) {
-    if(arr[k] == find) {
-      return k;
-    }
+//compares key values by doing some modifications. Takes in a int char value of the key name and a char for a flat or sharp symbol. If it isnt a
+//flat or sharp symbol it is ignored and has no effect on the output
+int keyToComp(int keyChar, char hS) {
+  //returns an int value for the key to make comparison easier
+  int halfStep = 0;
+  if(hS == 'b') {
+      halfStep = -1;
+  } else if (hS == '#') {
+      halfStep = 1;
   }
-  return -1;
+
+  switch(keyChar) {
+    //c
+    case 67:
+      if(halfStep > 0) {
+        keyChar+=halfStep;
+      }
+      break;
+    //d
+    case 68:
+      keyChar++;
+      if(halfStep != 0) {
+        keyChar += halfStep;
+      }
+      break;
+    //e
+    case 69:
+      keyChar = 71;
+      if(halfStep != 0) {
+        keyChar += halfStep;
+      }
+      break;
+    case 70:
+      keyChar = 72;
+      if(halfStep != 0) {
+        keyChar += halfStep;
+      }
+      break;
+    case 71:
+      keyChar = 74;
+      if(halfStep != 0) {
+        keyChar += halfStep;
+      }
+      break;
+    case 65:
+      keyChar = 76;
+      if(halfStep != 0) {
+        keyChar += halfStep;
+      }
+      break;
+    case 66:
+      keyChar = 78;
+      if(halfStep != 0) {
+        keyChar += halfStep;
+      }
+      break;
+  }
+
+  return keyChar;
 }
 
 /* returns true if string k comes before string s and false otherwise
-comparison is done using the second index of k first then the first index */
+comparison is done using the second index of k first then the first index or
+if there is a sharp or flat it is done differently*/
 bool before(string k, string s) {
-  if(k.length() == 2 && s.length() == 2) {
-    if(k[1] != s[1]) {
-      //if the numbers in the second index are not the same, then return the result of the comparison of the numbers
-      return k[1] < s[1];
-    } else {
-      //if the numbers are the same, then I return the comparison of the letters
-      //cout << "comparing if " << k[0] <<  " is greater than " << s[0] << (k[0] > s[0]) <<'\n';
-      if((k[0] != 'A' && k[0] != 'B') && (s[0] != 'A' && s[0] != 'B')) {
-        //cout << "normal case \n";
-        return k[0] < s[0];
-      } else {
-        //A val is 72
-        //I have an A or b
-        if(k[0] == 'A') {
-          k[0] = char(72);
-        }
-        if(k[0] == 'B') {
-          k[0] = char(73);
-        }
-        if(s[0] == 'A') {
-          s[0] = char(72);
-        }
-        if(s[0] == 'B') {
-          s[0] = char(73);
-        }
-        //cout << "comparing if " << k[0] <<  " is greater than " << s[0] << (k[0] > s[0]) <<'\n';
-        return k[0] < s[0];
+  //int keyChr = k[0];
+  int kVal = keyToComp(k[0], k[1]);
+  int sVal = keyToComp(s[0], s[1]);
+  //int keyChr = keytoComp(keyChr, halfStep);
 
-      }
-    }
+
+  //COMPARING NUMBERS IS FIRST
+  // k[k.lenght]
+  int kLen = k.length(), sLen = s.length();
+  if(k[kLen-1] != s[sLen-1]) {
+    //if the numbers in the second index are not the same, then return the result of the comparison of the numbers
+    return k[kLen-1] < s[sLen-1];
   } else {
-    
+    return kVal < sVal;
   }
+
 }
 
 //sorts an array of strings alphebetically of length n. uses selectionsort
@@ -75,6 +110,19 @@ void sort(string* arr, int n) {
   }
 }
 
+//searches an array of length n starting at index i, for a string and returns true if it is found and false if not
+int search(string* arr, string find, int i, int n) {
+  int findVal = keyToComp(find[0], find[1]);
+  int fLen = find.length();
+  for(int k=i; k<n; k++) {
+    if(keyToComp(arr[k][0], arr[k][1]) == findVal) {
+      if(arr[k][arr[k].length()-1] == find[fLen-1] )
+      //also add a check for if the numbers are the same!!
+        return k;
+    }
+  }
+  return -1;
+}
 
 
 int main() {

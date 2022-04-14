@@ -5,8 +5,8 @@ using namespace std;
 
 int** genDeck() {
   int** deck = new int*[52];
-  //v is face value and s is suit
-  int v=2, s=0;
+  //v is face value and s is suit pv is point value
+  int v=2, s=0, pv = 2;
   for(int c=0; c<52; c++) {
 
     if(c%13==0) {
@@ -15,12 +15,22 @@ int** genDeck() {
 
     //create each card pointer
     deck[c] = new int[3];
-    deck[c][2] = 100*s+v;
+    deck[c][2] = pv++;
     deck[c][0] = s;
     deck[c][1] = v++;
+    if(pv > 10) {
+      pv = 10;
+      //makes point value 10 for all face cards
+    }
+    //aces are scored as 1
+    if(v == 14) {
+      pv = 1;
+    }
 
     if(v>14){
       v=2;
+      pv = 2;
+      //resets v and pv after counting all the face cards
     }
   }
   return deck;
@@ -110,7 +120,40 @@ void printDeck(int** deck,int n) {
   }
 }
 
-void displayHands(int*** players, int turns, int pCount, int dCount) {
+//reads a deck and
+void scoreDeck(int*** players, int turns, int pCount, int dCount) {
+  int p1Score = 0, p2Score = 0;
+  bool p1Ace = false, p2Ace = false;
+  for(int i=0; i<turns+1; i++) {
+    if(i < pCount) {
+      p1Score += players[1][i][2];
+    }
+    if(players[1][i][1] == 14) {
+      //ace
+      p1Ace = true;
+    }
+
+    if(i < dCount) {
+      p2Score += players[0][i][2];
+    }
+    if(players[0][i][1] == 14) {
+      //ace
+      p2Ace = true;
+    }
+  }
+
+  if((p1Score+10)<21 && p1Ace) {
+    p1Score += 10;
+  }
+  if((p2Score+10)<21 && p2Ace) {
+    p2Score += 10;
+  }
+
+  cout << "Player " << p1Score << ", Dealer " << p2Score << '\n';
+}
+
+
+void displayHands(int*** players, int turns, int pCount, int dCount, bool printScore) {
   cout << " Player Dealer\n";
   //turns starts at 1 when card count is 2, so max card count is 1+turns. Run this loop for maximum possible cards and only print if there is a card at that index.
   for(int i=0; i<turns+1; i++) {
@@ -133,6 +176,9 @@ void displayHands(int*** players, int turns, int pCount, int dCount) {
       }
       cout << "  |\n";
     }
+  }
+  if(printScore) {
+    scoreDeck(players, turns, pCount, dCount);
   }
 }
 
@@ -235,7 +281,7 @@ int main() {
   int pccount = 0, dccount = 0;
   dealCards(deck, players, pccount++, dccount++, true, true);
   dealCards(deck, players, pccount++, dccount++, true, true);
-  displayHands(players, turn, pccount, dccount);
+  displayHands(players, turn, pccount, dccount, true);
 
   while(play) {
     //ask player to hit or stand
@@ -250,7 +296,7 @@ int main() {
         //play = false;
       }
       //count to turn+1 because it hasnt accounted for the turn being incremented afer both players move.
-      displayHands(players, turn+1, pccount, dccount);
+      displayHands(players, turn+1, pccount, dccount, true);
     }
     system("clear");
     if(dealerIn) {
@@ -261,7 +307,11 @@ int main() {
         //play = false;
         dealerIn = false;
       }
-      displayHands(players, turn+1, pccount, dccount);
+      if(turn < 3) {
+        displayHands(players, turn+1, pccount, dccount, true);
+      } else {
+        displayHands(players, turn+1, pccount, dccount, false);
+      }
       //ask dealer to hit or stand
       // if(!playerIn) {
       //   turn++;
