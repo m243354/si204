@@ -91,6 +91,15 @@ void movePlayer(point &p, bool forward, int dist) {
   }
 }
 
+bool collision(point p, point* Players, int n) {
+  for(int i=1; i<n; i++) {
+    if(p.x == Players[i].x && p.y == Players[i].y) {
+      return true;
+    }
+  }
+  return false;
+}
+
 
 
 int main() {
@@ -159,6 +168,11 @@ int main() {
         if(key == 'd') {
           Players[0].dir = 1;
         }
+        if(collision(Players[0], Players, playerC)) {
+          //end game
+          key = 'q';
+
+        }
       }
       if(canMove(Players[i], true, 1, wid, hei)) {
         movePlayer(Players[i], true, 1);
@@ -174,5 +188,6 @@ int main() {
   }while(key != 'q');
 
   endCurses();
+  cout << "You survived " << steps << " steps!\n";
   return 0;
 }
