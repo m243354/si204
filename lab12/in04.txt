@@ -1,0 +1,4 @@
+(smelly 3)
+(is 1)
+(dog 2)
+(the 1)

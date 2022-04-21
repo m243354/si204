@@ -1,0 +1,8 @@
+(flatulent 5)
+(smelly 3)
+(is 1)
+(sounds 2)
+(dog 2)
+(cat 2)
+(a 1)
+(the 1)
