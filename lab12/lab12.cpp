@@ -50,9 +50,17 @@ void nodeStats(Node* P, int numToEnd, int numToStart) {
     }
   }
   cout << '\n';
-  cout << "Before is: "<< numToStart << "\n";
-  cout << "Current is: " << "(" << P->data.txt << " " << P->data.num << ")\n";
   cout << "Number after is: " << numToEnd << '\n';
+  if(P!=NULL) {
+    cout << P->next->data.txt << endl;
+    for(int i=0; i<numToEnd-1; i++) {
+      cout << i;
+      P = P->next;
+      cout << P->data.txt << " ";
+    }
+  }
+  cout << "Current is: " << "(" << P->data.txt << " " << P->data.num << ")\n";
+  // cout << "Number after is: " << numToEnd << '\n';
   cout << "[a]ccept or [r]eject: ";
   cout << '\n';
 }

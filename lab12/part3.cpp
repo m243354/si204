@@ -3,9 +3,6 @@
 #include "lab12.h"
 using namespace std;
 
-
-
-
 int main() {
   //get our filename and read in the data
   cout << "Input file is: ";
@@ -31,16 +28,12 @@ int main() {
   //now we have to do this again but allow the user to accept or reject data.
   //we will iterate through P backwards
   int datCount = getLinkListLen(P);
+  //t is our temp traversal node
   Node* T = P;
   for(int i=datCount; i>0; i--) {
-    for(int k=i; k<datCount; k++) {
-      if(T!= NULL) {
-        T = T->next;
-      }
-    }
     nodeStats(T, i, datCount-i);
     cin >> c;
-    T = P;
+    cout << endl;
   }
 
   cout << "\n\n\n DEBUG: \n";
