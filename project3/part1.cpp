@@ -3,6 +3,9 @@
 #include "Node.h"
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
+
+// submit ~/bin/submit -c=SI204 -p=proj03 Makefile part1.cpp Node.cpp Pos.cpp easycurses.cpp easycurses.h Node.h Pos.h board2Rm.txt boardCenter.txt boardMaze.txt boardTiny.txt
 
 using namespace std;
 
@@ -19,9 +22,11 @@ struct Spawn {
 };
 
 struct Board {
-  int height, width, dat;
+  int height, width, maxSpawn;
   Node* bList;
-  Spawn* spawnList;
+  point* spawnList;
+  point playerSpawn;
+  point goalSpawn;
 };
 
 
@@ -41,28 +46,27 @@ Board readFile(ifstream& f) {
   char c;
   Board b;
   b.bList = new Node;
-  f >> b.height >> c >> b.width >> b.dat;
+  f >> b.height >> c >> b.width >> b.maxSpawn;
   int x = 0, y = 0, spCount = 0;
   //add 2 to spawnlist because it is the amt of Z spawns plus the goal spawns
-  b.spawnList = new Spawn[b.dat+2];
+  b.spawnList = new point[b.maxSpawn];
   while(f.get(c)) {
     addNode(b.bList, c);
     if(c == 'Z') {
-      b.spawnList[spCount].name = "Spawn spot";
-      b.spawnList[spCount].p.x = x;
-      b.spawnList[spCount].p.y = y;
+      //somewhere this flip may be a problem
+      b.spawnList[spCount].x = y-1;
+      b.spawnList[spCount].y = x-1;
+      spCount++;
       //add x and y dadat
     }
     if(c == 'X') {
-      b.spawnList[spCount].name = "Goal spot";
-      b.spawnList[spCount].p.x = x;
-      b.spawnList[spCount].p.y = y;
+      b.goalSpawn.x = y-1;
+      b.goalSpawn.y = x-1;
       //add x and y dadat
     }
     if(c == 'Y') {
-      b.spawnList[spCount].name = "Player spawn";
-      b.spawnList[spCount].p.x = x;
-      b.spawnList[spCount].p.y = y;
+      b.playerSpawn.x = y-1;
+      b.playerSpawn.y = x-1;
       //add x and y dadat
     }
     if(c == '\n') {
@@ -99,8 +103,14 @@ int main() {
       break;
     }
   } while(true);
+
   endCurses();
-  cout << "Player start: ";
+  //ending data
+  cout << "Player start: " << '(' << t.playerSpawn.x << ',' << t.playerSpawn.y << ")\n";
+  cout << "Spawn spots : ";
+  for(int i=0; i<t.maxSpawn; i++) {
+    cout << '(' << t.spawnList[i].x << ',' << t.spawnList[i].y << ") ";
+  }
   return 0;
 
 }

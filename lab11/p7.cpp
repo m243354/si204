@@ -128,7 +128,7 @@ int main() {
   srand(time(0));
   do {
     // draw character
-      drawPoints(Players, playerC);
+    drawPoints(Players, playerC);
 
     refreshWindow(); // These two lines correspond to flipping to
     usleep(delay);  // the next frame in the animation.
