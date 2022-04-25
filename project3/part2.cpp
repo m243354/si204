@@ -20,6 +20,7 @@ struct Board {
   int height, width, maxSpawn;
   Node* bList;
   point* spawnList;
+  point** bArr;
   point playerSpawn;
   point goalSpawn;
 };
@@ -118,40 +119,49 @@ Board readFile(ifstream& f) {
   Board b;
   b.bList = new Node;
   f >> b.height >> c >> b.width >> b.maxSpawn;
-  int x = 0, y = 0, spCount = 0;
-  //add 2 to spawnlist because it is the amt of Z spawns plus the goal spawns
+  int spCount = 0;
+  //initialitzing point arrays based on the data we read from the file
   b.spawnList = new point[b.maxSpawn];
-  while(f.get(c)) {
-    addNode(b.bList, c);
-    if(c == 'Z') {
-      //somewhere this flip may be a problem
-      b.spawnList[spCount].x = y-1;
-      b.spawnList[spCount].y = x-1;
-      spCount++;
-      //add x and y dadat
+  b.bArr = new point*[b.height];
+
+  for(int r=0; r<b.height; r++) {
+    b.bArr[r] = new point[b.width];
+    for(int col=0; col<b.width; col++) {
+      f.get(c);
+      point k;
+      k.cVal = c;
+      k.x = col;
+      k.y = r;
+      b.bArr[r][col] = k;
+      if(c == 'Z') {
+        //somewhere this flip may be a problem
+        b.spawnList[spCount].x = col-1;
+        b.spawnList[spCount].y = r-1;
+        spCount++;
+        //add x and y dadat
+      }
+      if(c == 'X') {
+        b.goalSpawn.x = col-1;
+        b.goalSpawn.y = r-1;
+        //add x and y dadat
+      }
+      if(c == 'Y') {
+        b.playerSpawn.x = col-1;
+        b.playerSpawn.y = r-1;
+        //add x and y dadat
+      }
     }
-    if(c == 'X') {
-      b.goalSpawn.x = y-1;
-      b.goalSpawn.y = x-1;
-      //add x and y dadat
-    }
-    if(c == 'Y') {
-      b.playerSpawn.x = y-1;
-      b.playerSpawn.y = x-1;
-      //add x and y dadat
-    }
-    if(c == '\n') {
-      x=0;
-      y++;
-    }
-    x++;
   }
   return b;
 }
 
 void printBoard(Board b) {
-  printLinkListRev(b.bList);
+
 }
+
+// void printBoard(Board b) {
+//   printLinkListRev(b.bList);
+// }
 
 
 int main() {
@@ -231,17 +241,26 @@ int main() {
       if(canMove(objs[i], true, 1, wid, hei)) {
         movePlayer(objs[i], true, 1);
       } else {
-        if(objs[i].dir > 1) {
-          objs[i].dir -= 2;
-        } else {
-          objs[i].dir = 3;
+        switch(objs[i].dir) {
+          case 0:
+            objs[i].dir = 2;
+            break;
+          case 1:
+            objs[i].dir = 3;
+            break;
+          case 2:
+            objs[i].dir = 0;
+            break;
+          case 3:
+            objs[i].dir = 1;
+            break;
         }
         movePlayer(objs[i], true, 1);
       }
     }
 
     drawPoints(objs, pCount);
-    usleep(150000);
+    usleep(80000);
 
     if (key == 'y') {  // game exits with a 'y'
       break;
@@ -253,8 +272,9 @@ int main() {
   cout << "Player start: " << '(' << t.playerSpawn.x << ',' << t.playerSpawn.y << ")\n";
   cout << "Spawn spots : ";
   for(int i=0; i<t.maxSpawn; i++) {
-    cout << '(' << t.spawnList[i].x << ',' << t.spawnList[i].y << ") ";
+    cout << '(' << t.spawnList[i].x << ',' << t.spawnList[i].y << ')';
   }
+  cout << '\n';
   return 0;
 
 }
