@@ -4,7 +4,7 @@
 #include "Board.h"
 #include <unistd.h>
 
-// submit ~/bin/submit -c=SI204 -p=proj03 Makefile part2.cpp Board.cpp Point.cpp Pos.cpp easycurses.cpp easycurses.h Board.h Point.h Pos.h board2Rm.txt boardCenter.txt boardMaze.txt boardTiny.txt
+// submit ~/bin/submit -c=SI204 -p=proj03 Makefile part3.cpp Board.cpp Point.cpp Pos.cpp easycurses.cpp easycurses.h Board.h Point.h Pos.h board2Rm.txt boardCenter.txt boardMaze.txt boardTiny.txt
 
 using namespace std;
 
@@ -27,8 +27,7 @@ int main() {
   //printBoard(t);
 
   //count of "player" entities in the game
-  int pCount = 1+t.maxSpawn;
-  pCount = 1; //temp override
+  int pCount = 1+(t.maxSpawn*5);
   //player point object
   point Player;
   Player.cVal = 'P';
@@ -43,6 +42,7 @@ int main() {
   //add objects for the player to contend with to the objects list
   objs[0] = Player;
   for(int i=1; i<pCount; i++) {
+    t.spawnList.cVal = '*';
     objs[i] = t.spawnList[i];
   }
 
