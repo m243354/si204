@@ -167,3 +167,12 @@ void handleMove(point &p, char key, bool &mvToggle) {
 int dist(point p, point q) {
   return abs(p.y - q.y) + abs(p.x - q.x);
 }
+
+// //overwrites the assignment operator
+// point operator=(point &a) {
+//   point t;
+//   t.x = a.x;
+//   t.y = a.y;
+//   t.dir = a.dir;
+//   return t;
+// }

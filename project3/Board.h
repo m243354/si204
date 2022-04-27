@@ -23,4 +23,6 @@ void printBoard(Board b);
 //returns true if the point is near the goal
 bool isGoal(Board b, point p);
 
+void destroyBoard(Board b);
+
 #endif

@@ -25,10 +25,10 @@ Board readFile(ifstream& f) {
     b.bArr[r] = new point[b.width];
     for(int col=0; col<b.width; col++) {
       f.get(c);
+      //if c is a hashtag count it as a wall
       if(c==35) {
         b.wallCount++;
       }
-      //cout << "r: " << r << " col: " << col << " value: "<<int(c) <<endl;
       point k;
       k.cVal = c;
       k.y = col;
@@ -37,6 +37,7 @@ Board readFile(ifstream& f) {
       b.bArr[r][col] = k;
       if(c == 'Z') {
         //correct positions
+        cout << "spawn added at: (" << r << ',' << col << ")\n";
         b.spawnList[spCount].y = col;
         b.spawnList[spCount].x = r;
         spCount++;
@@ -68,4 +69,12 @@ bool isGoal(Board b, point p) {
     return true;
   }
   return false;
+}
+
+void destroyBoard(Board b){
+ for(int r=0; r<b.height; r++) {
+   delete [] b.bArr[r];
+ }
+ delete [] b.bArr;
+ delete [] b.spawnList;
 }

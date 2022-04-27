@@ -27,7 +27,9 @@ bool canMove(point p, bool forward, int dist, int wid, int hei);
 //takes in a point, a movement toggle, and the key pressed. Makes the point move in the key direction of WASD and changes mvToggle accordingly.
 void handleMove(point &p, char key, bool &mvToggle);
 
-//yoinked from the Pos.h and made to work for my point struct. 
+//yoinked from the Pos.h and made to work for my point struct.
 int dist(point p, point q);
+//overrides the assignment operator for simplicity purposes
+// void operator=(point &a);
 
 #endif

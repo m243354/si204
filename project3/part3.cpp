@@ -17,6 +17,7 @@ int main() {
     cout << "Error! File not found.";
     return 1;
   }
+
   //shitty name ngl
   Board t;
   //load in the board
@@ -24,10 +25,12 @@ int main() {
   int wid = 0, hei = 0, turns = 0;
   const int DELAY = 100000;
 
-  //printBoard(t);
+  //TODO: MOVE THIS TO THE BOARD H OR CPP TO SIMPLIFY
 
   //count of "player" entities in the game
-  int pCount = 1+(t.maxSpawn*5)+t.maxSpawn;
+  int starCount = t.maxSpawn*5;
+  int pCount = 1+starCount;
+
   //player point object
   point Player;
   Player.cVal = 'P';
@@ -41,15 +44,22 @@ int main() {
   point* walls = new point[t.wallCount];
   //add objects for the player to contend with to the objects list
   objs[0] = Player;
-  for(int i=1; i<pCount; i++) {
-    if(pCount < 1+t.maxSpawn) {
-      t.spawnList.cVal = 'K';
-    } else {
-      t.spawnList.cVal = '*';
+  int ind = 1;
+  for(int i=0; i<starCount/5; i++) {
+    //for every spawn, ther is one spawn point and 5 stars
+    for(int s=0; s<5; s++) {
+      t.spawnList[i].cVal = '*';
+      objs[ind] = t.spawnList[i];
+      cout << t.spawnList[i].x << endl;
+      objs[ind].x = t.spawnList[i].x;
+      objs[ind].y = t.spawnList[i].y;
+      //pick random starting direction
+      objs[ind].dir = rand() % 4;
+      //increment object index
+      ind++;
     }
-    objs[i] = t.spawnList[i];
-  }
 
+  }
   //add all points from the board to walls for collision function
   int wc = 0;
   for(int r=0; r<t.height; r++) {
@@ -60,6 +70,8 @@ int main() {
       }
     }
   }
+
+
   bool win = false;
   startCurses();
   getWindowDimensions(wid, hei);
@@ -79,11 +91,21 @@ int main() {
         if(rando == 1) {
           int turnRand = rand() % 2 + 1;
           if(turnRand == 1) {
+            //turn left
             rotateDir(objs[i], true);
           } else {
+            //turn right
             rotateDir(objs[i], false);
           }
         }
+
+        movePoint(objs[i], true, 1);
+        if(collision(objs[i], walls, t.wallCount, 0)) {
+          invertDir(objs[i]);
+          movePoint(objs[i], true, 1);
+        }
+
+
       } else {
 
         //player movement logic
@@ -124,16 +146,16 @@ int main() {
 
   endCurses();
   //ending data'
+
   if(win) {
     cout << "Victory!\n";
   } else {
     cout << "Defeat...\n";
   }
   cout << "Score: " << 500-turns;
-  for(int i=0; i<t.maxSpawn; i++) {
-    cout << '(' << t.spawnList[i].x << ',' << t.spawnList[i].y << ')';
-  }
-  cout << '\n';
+  destroyBoard(t);
+  delete [] objs;
+  delete [] walls;
   return 0;
 
 }
