@@ -19,7 +19,6 @@ int main() {
   for(int i=0; i<words; i++) {
     printf("%s\n", out[i]);
   }
-
   return 0;
 }
 
