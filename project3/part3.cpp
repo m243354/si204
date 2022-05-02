@@ -24,6 +24,7 @@ int main() {
   t= readFile(f);
   int wid = 0, hei = 0, turns = 0;
   const int DELAY = 100000;
+  const int SEC = 1000000;
 
   //TODO: MOVE THIS TO THE BOARD H OR CPP TO SIMPLIFY
 
@@ -50,7 +51,6 @@ int main() {
     for(int s=0; s<5; s++) {
       t.spawnList[i].cVal = '*';
       objs[ind] = t.spawnList[i];
-      cout << t.spawnList[i].x << endl;
       objs[ind].x = t.spawnList[i].x;
       objs[ind].y = t.spawnList[i].y;
       //pick random starting direction
@@ -118,6 +118,7 @@ int main() {
           //end game because the player was killed
           key = 'y';
           win = false;
+          usleep(SEC*2);
         }
         //check if goalS
         if(isGoal(t, objs[0])) {

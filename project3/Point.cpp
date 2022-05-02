@@ -43,6 +43,8 @@ bool collision(point p, point* entities, int n, int stIndex) {
     if(p.x == entities[i].x && p.y == entities[i].y) {
       return true;
     }
+    //now check if P and and entity have passed through each other by having the same previous positions
+
   }
   return false;
 }
@@ -116,6 +118,9 @@ bool canMove(point p, bool forward, int dist, int wid, int hei) {
 
 //increments the point position based on the direction and the distance specified. Used in conjunction with canMove
 void movePoint(point &p, bool forward, int dist) {
+  p.lastX = p.x;
+  p.lastY = p.y;
+  p.lastDir = p.dir;
   int neg = 1;
   if(forward) {
     neg = 1;

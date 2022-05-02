@@ -5,6 +5,7 @@
 struct point {
   char cVal;
   int x, y, dir;
+  int lastX, lastY, lastDir;
 };
 
 //draws a point array p of length n at their position. Ignore is a special case to not print out Zs and Ys.
