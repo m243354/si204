@@ -43,7 +43,13 @@ bool collision(point p, point* entities, int n, int stIndex) {
     if(p.x == entities[i].x && p.y == entities[i].y) {
       return true;
     }
+    if(p.x == entities[i].lastX && p.y == entities[i].lastY && p.lastX == entities[i].x && p.lastY == entities[i].y) {
+      return true;
+    }
     //now check if P and and entity have passed through each other by having the same previous positions
+  //  After each object has made its step for the round, we will say that player P and star S have collided
+  //    both P's current position is the same as S's previous position and P's previous position
+  //is the same as S's current position.
 
   }
   return false;

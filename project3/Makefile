@@ -25,12 +25,12 @@ part3:
 # preceeding the clang++ must be a tab and nothing but a tab!
 
 part4:
-	clang++ -Wall -o part4 part4.cpp Pos.cpp easycurses.cpp -l ncurses
+	clang++ -Wall -o part4 part4.cpp Point.cpp Board.cpp Pos.cpp easycurses.cpp -l ncurses
 ########
 # preceeding the clang++ must be a tab and nothing but a tab!
 
 part5:
-	clang++ -Wall -o part5 part5.cpp Pos.cpp easycurses.cpp -l ncurses
+	clang++ -Wall -o part5 part5.cpp Pos.cpp Point.cpp Board.cpp Pos.cpp easycurses.cpp -l ncurses
 ########
 # preceeding the clang++ must be a tab and nothing but a tab!
 
