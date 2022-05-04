@@ -67,7 +67,7 @@ void printLinkListRev(sNode* firstNode) {
     return;
   }
   printLinkListRev(firstNode->next);
-  for(int i=0; i<4; i++) {
+    for(int i=0; i<4; i++) {
     cout << (firstNode->data)[i] << ' ';
   }
   cout << '\n';
