@@ -1,0 +1,7 @@
+N = 6
+Mario 23
+Nikki 72
+Lewis 81
+Sebastian 62
+Max 53
+Fernando 42

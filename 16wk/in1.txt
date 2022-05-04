@@ -1,0 +1,15 @@
+N = 14
+Kate 5
+Jennifer 14
+Brie 16
+Julianne 15
+Marion 3
+Renee 19
+Natalie 12
+Frances 22
+Sandra 2
+Olivia 18
+Emma 17
+Cate 13
+Jessica 21
+Meryl 11

@@ -1,0 +1,11 @@
+N = 10
+Nikola 2500
+Giannis 2030
+James 2000
+Russell 2880
+Stephen 2001
+Kevin 2017
+LeBron 2011
+Derrick 2120
+Kobe 2800
+Dirk 2042
