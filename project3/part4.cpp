@@ -167,26 +167,26 @@ int main() {
       } else {
 
         //player movement logic
-        handleMove(objs[0], key, mvToggle);
+        handleMove(objs[i], key, mvToggle);
         if(mvToggle) {
-          movePoint(objs[0], true, 1);
+          movePoint(objs[i], true, 1);
         }
 
-        if(collision(objs[0], objs, pCount)) {
+        if(collision(objs[i], objs, pCount)) {
           //end game because the player was killed
           key = 'y';
           win = false;
           usleep(SEC*2);
         }
         //check if goalS
-        if(isGoal(t, objs[0])) {
+        if(isGoal(t, objs[i])) {
           key = 'y';
           win = true;
         }
         //wall collision check
-        if(collision(objs[0], walls, t.wallCount, 0)) {
-          invertDir(objs[0]);
-          movePoint(objs[0], true, 1);
+        if(collision(objs[i], walls, t.wallCount, 0)) {
+          invertDir(objs[i]);
+          movePoint(objs[i], true, 1);
         }
       }
     }

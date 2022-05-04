@@ -37,7 +37,6 @@ Board readFile(ifstream& f) {
       b.bArr[r][col] = k;
       if(c == 'Z') {
         //correct positions
-        cout << "spawn added at: (" << r << ',' << col << ")\n";
         b.spawnList[spCount].y = col;
         b.spawnList[spCount].x = r;
         spCount++;
