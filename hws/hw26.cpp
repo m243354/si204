@@ -36,30 +36,6 @@ void selectionsort(int *A, int N) {
   }
 }
 
-int* selectionsort2(int *A, int n) {
-  int* newL = new int[n];
-  int oddPos = n/2-1;
-  int evenPos = n-1;
-  cout << "odd: " << oddPos << " e: " << evenPos << '\n';
-  while((evenPos > n/2) && oddPos > 0) {
-    int k = indexOfMax(A,n);
-    cout << "A[k] = " << A[k];
-    if(A[k] % 2 != 0) {
-      //if A[k] is largest odd number, then move it to the last position of odd numbers
-      newL[oddPos] = A[k];
-      oddPos--;
-      //need to go from n/2-1 to 0.
-    } else {
-      //if a [k] is largest even number, then move it to this position
-      newL[evenPos] = A[k];
-      evenPos--;
-      //need to go from n-1 to n/2.
-    }
-
-  }
-  return newL;
-}
-x
 void print(int *list, int n) {
   for(int i=0; i<n; i++) {
     cout << list[i];

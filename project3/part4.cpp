@@ -24,7 +24,7 @@ int main() {
   t= readFile(f);
   int wid = 0, hei = 0, turns = 0;
   const int DELAY = 100000;
-
+  const int SEC = 1000000;
   //TODO: MOVE THIS TO THE BOARD H OR CPP TO SIMPLIFY
 
   //count of "player" entities in the game
@@ -36,6 +36,8 @@ int main() {
   Player.cVal = 'P';
   Player.y = t.playerSpawn.y;
   Player.x = t.playerSpawn.x;
+  Player.lastX = t.playerSpawn.x;
+  Player.lastY = t.playerSpawn.y;
   //is the player moving?
   bool mvToggle = false;
 
@@ -45,20 +47,36 @@ int main() {
   //add objects for the player to contend with to the objects list
   objs[0] = Player;
   int ind = 1;
-  for(int i=0; i<t.maxSpawn; i++) {
+  for(int i=0; i<starCount/5; i++) {
     //for every spawn, ther is one spawn point and 5 stars
     for(int s=0; s<5; s++) {
       t.spawnList[i].cVal = '*';
       objs[ind] = t.spawnList[i];
-      cout << t.spawnList[i].x << endl;
       objs[ind].x = t.spawnList[i].x;
       objs[ind].y = t.spawnList[i].y;
       //pick random starting direction
       objs[ind].dir = rand() % 4;
+      //avoid having these being undefined in collision function
+      objs[ind].lastDir = objs[ind].dir;
+      objs[ind].lastX = t.spawnList[i].x;
+      objs[ind].lastY = t.spawnList[i].y;
       //increment object index
       ind++;
     }
-
+  }
+  for(int i=0; i<t.maxSpawn; i++) {
+    t.spawnList[i].cVal = 'K';
+    objs[ind] = t.spawnList[i];
+    objs[ind].x = t.spawnList[i].x;
+    objs[ind].y = t.spawnList[i].y;
+    //pick random starting direction
+    objs[ind].dir = rand() % 4;
+    //avoid having these being undefined in collision function
+    objs[ind].lastDir = objs[ind].dir;
+    objs[ind].lastX = t.spawnList[i].x;
+    objs[ind].lastY = t.spawnList[i].y;
+    //increment object index
+    ind++;
   }
   //add all points from the board to walls for collision function
   int wc = 0;
@@ -86,25 +104,65 @@ int main() {
     delPoints(objs, pCount);
     for(int i=0; i<pCount; i++) {
       if(i != 0) {
-        //movement logic for the other objects
-        int rando = rand() % 10 + 1;
-        if(rando == 1) {
-          int turnRand = rand() % 2 + 1;
-          if(turnRand == 1) {
-            //turn left
-            rotateDir(objs[i], true);
+        if(i<(pCount-t.maxSpawn)) {
+          //movement logic for the stars
+          int rando = rand() % 10 + 1;
+          if(rando == 1) {
+            int turnRand = rand() % 2 + 1;
+            if(turnRand == 1) {
+              //turn left
+              rotateDir(objs[i], true);
+            } else {
+              //turn right
+              rotateDir(objs[i], false);
+            }
+          }
+
+          movePoint(objs[i], true, 1);
+          if(collision(objs[i], walls, t.wallCount, 0)) {
+            invertDir(objs[i]);
+            movePoint(objs[i], true, 1);
+          }
+        } else {
+          //killer movement logic
+//           1. let dc = Player column position - Killer column position
+// 2. let dr = Player row position - Killer row position
+// 3. if dc < 0 let cdir = 3 else let cdir = 1
+// 4. if dr < 0 let rdir = 0 else let rdir = 2
+// 5. with prob 1/2 set Killer's direction to rdir, otherwise set Killer's direction to cdir
+          int dc = Player.y-objs[i].y; int dr = Player.x-objs[i].x;
+          int cdir = 1, rdir = 2;
+          int rando = rand() % 2 + 1;
+
+          if(dc < 0) {
+            cdir = 3;
           } else {
-            //turn right
-            rotateDir(objs[i], false);
+            cdir = 1;
+          }
+
+          if(dr < 0) {
+            rdir = 0;
+          } else {
+            rdir = 2;
+          }
+
+          if(rando == 1) {
+            int turnRand = rand() % 2 + 1;
+            if(turnRand == 1) {
+              //set killer dir to rdir
+              objs[i].dir = rdir;
+            } else {
+              //set killer dir to cdir
+              objs[i].dir = cdir;
+            }
+          }
+
+          movePoint(objs[i], true, 1);
+          if(collision(objs[i], walls, t.wallCount, 0)) {
+            invertDir(objs[i]);
+            movePoint(objs[i], true, 1);
           }
         }
-
-        movePoint(objs[i], true, 1);
-        if(collision(objs[i], walls, t.wallCount, 0)) {
-          invertDir(objs[i]);
-          movePoint(objs[i], true, 1);
-        }
-
 
       } else {
 
@@ -118,6 +176,7 @@ int main() {
           //end game because the player was killed
           key = 'y';
           win = false;
+          usleep(SEC*2);
         }
         //check if goalS
         if(isGoal(t, objs[0])) {
