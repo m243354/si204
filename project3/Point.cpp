@@ -122,6 +122,47 @@ bool canMove(point p, bool forward, int dist, int wid, int hei) {
   return true;
 }
 
+//sets either xB or yB to true if the point is past the x bounds or the y bounds. Similar to can move but for 2d instead of 1d. 0 north, 1 east... so on.
+int outOfBounds(point p, bool forward, int dist, int wid, int hei) {
+  int neg = 1;
+  if(forward) {
+    neg = 1;
+  } else {
+    neg = -1;
+  }
+  switch(p.dir) {
+    case 0:
+    //north
+      p.x -= dist*neg;
+      if(p.x < 0) {
+        return 0;
+      }
+      break;
+    case 1:
+    //east (right)
+      p.y += dist*neg;
+      if(p.y >= hei) {
+        return 1;
+      }
+      break;
+    case 2:
+    //south
+      p.x += dist*neg;
+      if(p.x >= wid) {
+        return 2;
+      }
+      break;
+    case 3:
+    //west (left)
+      p.y -= dist*neg;
+      if(p.y < 0) {
+        return 3;
+      }
+      break;
+  }
+  return 4;
+}
+
 //increments the point position based on the direction and the distance specified. Used in conjunction with canMove
 void movePoint(point &p, bool forward, int dist) {
   p.lastX = p.x;

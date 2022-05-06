@@ -4,7 +4,7 @@
 using namespace std;
 
 
-
+ //g++ -o p3 part3.cpp lab12.cpp
 
 int main() {
   //get our filename and read in the data

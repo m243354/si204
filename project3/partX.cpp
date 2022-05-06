@@ -1,20 +1,22 @@
 #include "easycurses.h"
-#include "Pos.h"
 #include "Point.h"
 #include "Board.h"
 #include <unistd.h>
 #include "Node.h"
+#include "curses.h"
 
-//~/bin/submit -c=SI204 -p=proj03 Makefile part5.cpp Board.cpp Point.cpp Node.cpp Node.h easycurses.cpp Pos.cpp Pos.h easycurses.h Board.h Point.h board2Rm.txt boardCenter.txt boardMaze.txt boardTiny.txt board243354.txt
+//~/bin/submit -c=SI204 -p=proj03 Makefile part5.cpp Board.cpp Point.cpp Node.cpp Node.h easycurses.cpp easycurses.h Board.h Point.h board2Rm.txt boardCenter.txt boardMaze.txt boardTiny.txt board243354.txt
 
+//add holes in the map that let you escape. The game calls you a coward and you recieve a points deduction.
 
 using namespace std;
 
-bool game(string boardName, int numStar, int numKill, int score, int &totalScore);
+bool game(string boardName, int numStar, int numKill, int score, int &totalScore, int &roomChng);
 
 int main() {
   sNode* n = NULL;
   cout << "Enter script filename: ";
+  int roomsN;
   string filen, boardName, numStar, numKill, trash, score;
   cin >> filen;
   ifstream f(filen);
@@ -22,48 +24,83 @@ int main() {
     cout << "Error! File not found.";
     return 1;
   }
-  while(f >> boardName >> numStar >> numKill >> trash >> trash >> score) {
-    string* dat = new string[4];
-    dat[0] = boardName;
-    dat[1] = numStar;
-    dat[2] = numKill;
-    dat[3] = score;
-    addNode(n, dat);
-  }
-  printLinkListRev(n);
+  f >> boardName;
 
-  //traverses linked list in reverse. now get the data
-  int maxLevel = getLinkListLen(n);
-  int level =0;
-  int totalScore = 0;
-  string* a;
-  for(int i=0; i<maxLevel; i++) {
-    //0
-    //run 0 times, then 1 times, then 2...
-    for(sNode *p = n; level < maxLevel-i; p = p->next) {
-      a = p->data;
-      level++;
+  if(boardName == "Group") {
+    f >> roomsN;
+    int numKillr, numStarr, scorer;
+    f >> numStarr >> numKillr >> trash >> trash >> scorer;
+    string* multiBoard = new string[roomsN];
+    for(int i=0; i<roomsN; i++) {
+      f >> multiBoard[i];
     }
-    //right here amog is the string of data for starting the game.
-    int loserCount = 0;
-    //play game with these parameters and store win output in a boolean
-    while((!game(a[0], stoi(a[1]), stoi(a[2]), stoi(a[3]), totalScore)) && loserCount < 3) {
-      //while I lose keep playing until I lose three times or win.
-      loserCount++;
+    cout<<"kk";
+    //now I run the game wth the new parameters.
+    int level = 0, deaths = 0, totalScore = 0, levelCng = 0;
+    bool goal = false;
+    while(!goal) {
+      bool play = game(multiBoard[level], numStarr, numKillr, scorer, totalScore, levelCng);
+      if(play) {
+        //if this is true, I move to another room.
+        cout << flush;
+        level++;
+      } else {
+        //I died so I stay in the same room
+        deaths++;
+      }
     }
-    if(loserCount == 3) {
-      cout << "3 consecutive deaths. Game Over.\n";
-      cout << "You scored: " << totalScore << " points. Try again!";
-      return 0;
-    }
-    level = 0;
-  }
-  cout << "Victory! You cleared " << maxLevel << " maps and scored a total of " << totalScore << " points!";
 
+
+  } else {
+    //restart file because we aren't looking for a group level.
+    ifstream f(filen);
+    if(!f) {
+      cout << "Error! File not found.";
+      return 1;
+    }
+    while(f >> boardName >> numStar >> numKill >> trash >> trash >> score) {
+      string* dat = new string[4];
+      dat[0] = boardName;
+      dat[1] = numStar;
+      dat[2] = numKill;
+      dat[3] = score;
+      addNode(n, dat);
+    }
+    printLinkListRev(n);
+
+    //traverses linked list in reverse. now get the data
+    int maxLevel = getLinkListLen(n);
+    int level =0;
+    int totalScore = 0;
+    string* a;
+    for(int i=0; i<maxLevel; i++) {
+      //0
+      //run 0 times, then 1 times, then 2...
+      for(sNode *p = n; level < maxLevel-i; p = p->next) {
+        a = p->data;
+        level++;
+      }
+      //right here amog is the string of data for starting the game.
+      int loserCount = 0;
+      int trash = -1;
+      //play game with these parameters and store win output in a boolean
+      while((!game(a[0], stoi(a[1]), stoi(a[2]), stoi(a[3]), totalScore, trash)) && loserCount < 3) {
+        //while I lose keep playing until I lose three times or win.
+        loserCount++;
+      }
+      if(loserCount == 3) {
+        cout << "3 consecutive deaths. Game Over.\n";
+        cout << "You scored: " << totalScore << " points. Try again!";
+        return 0;
+      }
+      level = 0;
+    }
+    cout << "Victory! You cleared " << maxLevel << " maps and scored a total of " << totalScore << " points!";
+  }
   return 0;
 }
 
-bool game(string boardName, int numStar, int numKill, int score, int &totalScore) {
+bool game(string boardName, int numStar, int numKill, int score, int &totalScore, int &roomChng) {
   //setup the game from file
   ifstream f(boardName);
   if(!f) {
@@ -145,6 +182,7 @@ bool game(string boardName, int numStar, int numKill, int score, int &totalScore
 
   bool win = false;
   startCurses();
+  start_color();
   getWindowDimensions(wid, hei);
   //game loop
   do {
@@ -172,7 +210,7 @@ bool game(string boardName, int numStar, int numKill, int score, int &totalScore
           }
 
           movePoint(objs[i], true, 1);
-          if(collision(objs[i], walls, t.wallCount, 0)) {
+          if(collision(objs[i], walls, t.wallCount, 0) || !canMove(objs[i], true, 1, wid, hei)) {
             invertDir(objs[i]);
             movePoint(objs[i], true, 1);
           }
@@ -231,13 +269,32 @@ bool game(string boardName, int numStar, int numKill, int score, int &totalScore
           win = false;
           usleep(SEC*2);
         }
+        //check if player escaped map bounds
+        switch(outOfBounds(objs[i], true, 1, wid, hei)) {
+          default:
+            //do nothing
+            break;
+          case 0:
+            //went off top of map
+            break;
+          case 1:
+          //went off east of map
+            break;
+          case 2:
+          //wnt off bottom of map
+            break;
+          case 3:
+          //went of left of map
+            break;
+
+        }
         //check if goalS
         if(isGoal(t, objs[i])) {
           key = 'y';
           win = true;
         }
         //wall collision check
-        if(collision(objs[i], walls, t.wallCount, 0)) {
+        if(collision(objs[i], walls, t.wallCount, 0) || !canMove(objs[i], true, 1, wid, hei)) {
           invertDir(objs[i]);
           movePoint(objs[i], true, 1);
         }

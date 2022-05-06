@@ -35,6 +35,6 @@ part5:
 # preceeding the clang++ must be a tab and nothing but a tab!
 
 partX:
-	clang++ -Wall -o partX partX.cpp Pos.cpp easycurses.cpp Point.cpp Board.cpp Node.cpp -l ncurses
+	clang++ -Wall -o partX partX.cpp easycurses.cpp Point.cpp Board.cpp Node.cpp -l ncurses
 ########
 # preceeding the clang++ must be a tab and nothing but a tab!

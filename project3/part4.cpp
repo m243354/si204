@@ -4,7 +4,7 @@
 #include "Board.h"
 #include <unistd.h>
 
-// submit ~/bin/submit -c=SI204 -p=proj03 Makefile part3.cpp Board.cpp Point.cpp Pos.cpp easycurses.cpp easycurses.h Board.h Point.h Pos.h board2Rm.txt boardCenter.txt boardMaze.txt boardTiny.txt
+// submit ~/bin/submit -c=SI204 -p=proj03 Makefile part4.cpp Board.cpp Point.cpp Pos.cpp easycurses.cpp easycurses.h Board.h Point.h Pos.h board2Rm.txt boardCenter.txt boardMaze.txt boardTiny.txt
 
 using namespace std;
 
